@@ -7,7 +7,7 @@ class PriceHistorySchema(BaseModel):
     date: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class ProductCreateSchema(BaseModel):
     title: str
@@ -26,4 +26,4 @@ class ProductSchema(BaseModel):
     price_history: List[PriceHistorySchema] = []
 
     class Config:
-        orm_mode = True
+        from_attributes = True

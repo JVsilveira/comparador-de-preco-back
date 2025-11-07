@@ -1,18 +1,9 @@
-from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
-from app.schemas import ProductCreateSchema, ProductSchema
-from app.crud import crud_product as crud
-from app.core.database import get_db
+from fastapi import APIRouter, Query
+from app.services.services_product import search_mercado_livre
 
-router = APIRouter(
-    prefix="/products",
-    tags=["products"]
-)
+router = APIRouter(prefix="/products", tags=["Products"])
 
-@router.post("/", response_model=ProductSchema)
-def create_product(product: ProductCreateSchema, db: Session = Depends(get_db)):
-    return crud.create_product(db, product)
-
-@router.get("/", response_model=list[ProductSchema])
-def list_products(db: Session = Depends(get_db)):
-    return crud.get_products(db)
+@router.get("/")
+def get_products(query: str = Query(...)):
+    produtos = search_mercado_livre(query)
+    return {"count": len(produtos), "results": produtos}
